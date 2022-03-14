@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Form from "./components/form/Form";
+import FormWithFormik from "./components/form/FormWithFormik";
+import FormWithRFH from "./components/form/FormWithRFH";
+import Search from "./components/search/Search";
+import SearchWithReducer from "./components/search/SearchWithReducer";
+import SearchMovie from "./components/searchMovie/SearchMovie";
+import StyledC from "./components/styledComponents/StyledComponents";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StyledC />
     </div>
   );
 }
