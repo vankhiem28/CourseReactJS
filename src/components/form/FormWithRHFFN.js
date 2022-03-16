@@ -12,7 +12,7 @@ const schema = yup
     username: yup.string().required("Vui lòng nhập tên"),
     password: yup
       .string()
-      .min(8)
+      .min(8, "Mật khẩu phải ít nhất có 8 ký tự")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         {
@@ -24,6 +24,9 @@ const schema = yup
       .string()
       .email("Bạn nhập sai định dạng email")
       .required("Vui lòng nhập email"),
+    gender: yup.string().required("Vui lòng chọn giới tính"),
+    job: yup.string().required("Vui lòng chọn công việc"),
+    term: yup.string().required("Vui lòng xác nhận"),
   })
   .required();
 
@@ -31,16 +34,24 @@ function FormWithRHFFN() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting },
     control,
     setValue,
-  } = useForm({ resolver: yupResolver(schema) });
+    reset,
+  } = useForm({ resolver: yupResolver(schema), mode: "onchange" });
 
   const onSubmit = (values) => {
+    if (!isValid) return;
     console.log(values);
+    reset({
+      username: "",
+      password: "",
+      email: "",
+      gender: "",
+      job: "",
+      term: false,
+    });
   };
-
-  console.log(errors);
 
   return (
     <>
@@ -116,6 +127,9 @@ function FormWithRHFFN() {
             </div>
           </label>
         </div>
+        {errors.gender && (
+          <div className="text-red-500 ">{errors.gender.message}</div>
+        )}
         <div className="flex flex-col mb-2">
           <label htmlFor="" className="text-[16px]">
             Are you
@@ -128,6 +142,9 @@ function FormWithRHFFN() {
             ></SelectorBox>
           </div>
         </div>
+        {errors.job && (
+          <div className="text-red-500 ">{errors.job.message}</div>
+        )}
         <div className="flex flex-col mb-2">
           <div className="flex items-center gap-x-3">
             <div className="flex gap-x-2 items-center">
@@ -142,8 +159,15 @@ function FormWithRHFFN() {
             </label>
           </div>
         </div>
+        {errors.term && (
+          <div className="text-red-500 ">{errors.term.message}</div>
+        )}
         <button className="w-full p-4 bg-blue-400 rounded-lg mt-3 text-white">
-          Submit
+          {isSubmitting ? (
+            <div className="w-5 h-5 rounded-full border-2 border-white mx-auto border-t-transparent animate-spin"></div>
+          ) : (
+            <div>Submit</div>
+          )}
         </button>
       </form>
     </>
