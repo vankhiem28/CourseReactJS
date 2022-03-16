@@ -4,18 +4,43 @@ import CheckboxRHF from "./checkbox/CheckboxRHF";
 import InputRHF from "./input/InputRHF";
 import RadioRHF from "./radio/RadioRHF";
 import SelectorBox from "./Selectorbox/SelectorBox";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup
+  .object({
+    username: yup.string().required("Vui lòng nhập tên"),
+    password: yup
+      .string()
+      .min(8)
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        {
+          message: "Mật khẩu sai địng dạng",
+        }
+      )
+      .required("Vui lòng nhập mật khẩu"),
+    email: yup
+      .string()
+      .email("Bạn nhập sai định dạng email")
+      .required("Vui lòng nhập email"),
+  })
+  .required();
 
 function FormWithRHFFN() {
   const {
     register,
     handleSubmit,
-    formState: { error },
+    formState: { errors },
     control,
-  } = useForm();
+    setValue,
+  } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (values) => {
     console.log(values);
   };
+
+  console.log(errors);
 
   return (
     <>
@@ -29,12 +54,15 @@ function FormWithRHFFN() {
           </label>
           <InputRHF
             id="userNameID"
-            name="userName"
+            name="username"
             type="text"
             placeholder="Enter your username"
             control={control}
           ></InputRHF>
         </div>
+        {errors.username && (
+          <div className="text-red-500 ">{errors.username.message}</div>
+        )}
         <div className="flex flex-col mb-2">
           <label htmlFor="passwordID" className="text-[16px]">
             Password
@@ -47,6 +75,9 @@ function FormWithRHFFN() {
             control={control}
           ></InputRHF>
         </div>
+        {errors.password && (
+          <div className="text-red-500 ">{errors.password.message}</div>
+        )}
         <div className="flex flex-col mb-2">
           <label htmlFor="emailID" className="text-[16px]">
             Email
@@ -59,6 +90,9 @@ function FormWithRHFFN() {
             control={control}
           ></InputRHF>
         </div>
+        {errors.email && (
+          <div className="text-red-500 ">{errors.email.message}</div>
+        )}
         <div className="flex flex-col mb-2">
           <label htmlFor="" className="text-[16px]">
             Gender
@@ -87,7 +121,11 @@ function FormWithRHFFN() {
             Are you
           </label>
           <div className="">
-            <SelectorBox control={control}></SelectorBox>
+            <SelectorBox
+              control={control}
+              setValue={setValue}
+              name="job"
+            ></SelectorBox>
           </div>
         </div>
         <div className="flex flex-col mb-2">
